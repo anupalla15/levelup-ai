@@ -1,58 +1,105 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import {
-  FaRobot,
-  FaMicrophone,
-  FaBrain,
-} from "react-icons/fa";
+import { FaRobot, FaMicrophone, FaBrain } from "react-icons/fa";
 
 function Interview() {
 
-  const questions = [
-    "Explain the difference between REST APIs and GraphQL APIs.",
-    "What is React Virtual DOM and why is it important?",
-    "Explain asynchronous programming in JavaScript.",
-    "What are the advantages of microservices architecture?",
-    "Explain the difference between SQL and NoSQL databases."
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [difficulty, setDifficulty] = useState("medium");
+
+  const easyQuestions = [
+    "What is HTML?",
+    "What is CSS?",
+    "What is JavaScript?"
   ];
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const mediumQuestions = [
+    "What is React Virtual DOM?",
+    "Difference between REST and GraphQL?",
+    "Explain React Hooks"
+  ];
 
-  const [answer, setAnswer] = useState("");
+  const hardQuestions = [
+    "Explain React rendering lifecycle",
+    "Explain database indexing",
+    "What is system design?"
+  ];
 
-  const [feedback, setFeedback] = useState("");
-
-  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setQuestion(
+      mediumQuestions[
+        Math.floor(Math.random() * mediumQuestions.length)
+      ]
+    );
+  }, []);
 
   const nextQuestion = () => {
 
-    if (currentQuestion < questions.length - 1) {
+    setAnswer("");
+    setFeedback("");
 
-      setCurrentQuestion(currentQuestion + 1);
+    if (difficulty === "easy") {
 
-      setAnswer("");
+      setQuestion(
+        easyQuestions[
+          Math.floor(Math.random() * easyQuestions.length)
+        ]
+      );
 
-      setFeedback("");
+    } else if (difficulty === "hard") {
+
+      setQuestion(
+        hardQuestions[
+          Math.floor(Math.random() * hardQuestions.length)
+        ]
+      );
+
+    } else {
+
+      setQuestion(
+        mediumQuestions[
+          Math.floor(Math.random() * mediumQuestions.length)
+        ]
+      );
+
     }
   };
 
   const analyzeAnswer = async () => {
 
-    if (!answer) return;
-
-    setLoading(true);
-
     try {
+
+      setLoading(true);
 
       const response = await axios.post(
         "http://127.0.0.1:8000/analyze",
         {
-          answer: answer,
+          answer: answer
         }
       );
 
       setFeedback(response.data.feedback);
+
+      if (
+        answer.toLowerCase().includes("i don't know") ||
+        answer.length < 20
+      ) {
+
+        setDifficulty("easy");
+
+      } else if (answer.length > 100) {
+
+        setDifficulty("hard");
+
+      } else {
+
+        setDifficulty("medium");
+
+      }
 
     } catch (error) {
 
@@ -60,180 +107,84 @@ function Interview() {
 
       setFeedback("Error analyzing answer.");
 
-    }
+    } finally {
 
-    setLoading(false);
+      setLoading(false);
+
+    }
   };
 
   return (
 
-    <div className="min-h-screen bg-[#060816] text-white px-6 py-20 relative overflow-hidden">
+    <div className="min-h-screen bg-[#060816] text-white flex items-center justify-center p-10">
 
-      {/* BACKGROUND */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-500/20 blur-[140px] rounded-full"></div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="w-full max-w-4xl bg-white/5 border border-white/10 rounded-3xl p-10"
+      >
 
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/20 blur-[140px] rounded-full"></div>
+        <div className="flex items-center gap-3 mb-6 text-purple-400">
+          <FaRobot />
+          <span>AI Adaptive Interview Engine</span>
+        </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
+        <h1 className="text-5xl font-bold mb-6">
+          AI Mock Interview
+        </h1>
 
-        {/* HEADER */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="mb-16"
-        >
-
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 mb-6">
-
-            <FaRobot />
-
-            <span>AI Adaptive Interview Engine</span>
-
-          </div>
-
-          <h1 className="text-6xl font-bold leading-tight">
-            AI Mock Interview
-          </h1>
-
-          <p className="text-gray-400 text-lg mt-6 max-w-3xl">
-            Practice intelligent AI-driven technical interviews with adaptive reasoning,
-            personalized analysis, and developer-focused feedback.
+        <div className="mb-8">
+          <p className="text-gray-400 mb-2">
+            Difficulty: {difficulty}
           </p>
 
-        </motion.div>
+          <div className="bg-black/30 p-6 rounded-2xl">
+            {question}
+          </div>
+        </div>
 
-        {/* MAIN CARD */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="bg-white/5 border border-white/10 rounded-[40px] p-10 backdrop-blur-md shadow-2xl"
-        >
+        <textarea
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+          placeholder="Type your answer..."
+          className="w-full h-40 bg-black/30 border border-white/10 rounded-2xl p-5 text-white mb-6"
+        />
 
-          {/* TOP INFO */}
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
+        <div className="flex gap-4">
 
-            <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
+          <button
+            onClick={analyzeAnswer}
+            className="bg-purple-600 px-6 py-3 rounded-full"
+          >
+            {loading ? "Analyzing..." : "Analyze Answer"}
+          </button>
 
-              <p className="text-gray-400 mb-3">
-                Interview Domain
-              </p>
+          <button
+            onClick={nextQuestion}
+            className="border border-purple-500 px-6 py-3 rounded-full"
+          >
+            Next Question
+          </button>
 
-              <h2 className="text-2xl font-semibold">
-                Full Stack Development
-              </h2>
+        </div>
 
-            </div>
+        {feedback && (
 
-            <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
+          <div className="mt-8 bg-black/30 p-6 rounded-2xl">
 
-              <p className="text-gray-400 mb-3">
-                Difficulty Level
-              </p>
+            <h2 className="text-2xl font-bold mb-4 text-purple-400">
+              AI Interview Feedback
+            </h2>
 
-              <h2 className="text-2xl font-semibold text-purple-400">
-                Intermediate
-              </h2>
-
-            </div>
-
-            <div className="bg-black/30 border border-white/10 rounded-3xl p-6">
-
-              <p className="text-gray-400 mb-3">
-                AI Confidence
-              </p>
-
-              <h2 className="text-2xl font-semibold text-blue-400">
-                Adaptive
-              </h2>
-
-            </div>
+            <p className="whitespace-pre-wrap">
+              {feedback}
+            </p>
 
           </div>
 
-          {/* QUESTION */}
-          <div className="mb-10">
+        )}
 
-            <div className="flex items-center gap-4 mb-5">
-
-              <FaBrain className="text-3xl text-purple-400" />
-
-              <h2 className="text-3xl font-semibold">
-                Interview Question
-              </h2>
-
-            </div>
-
-            <div className="bg-black/30 border border-white/10 rounded-3xl p-8 text-lg leading-relaxed">
-
-              {questions[currentQuestion]}
-
-            </div>
-
-          </div>
-
-          {/* ANSWER */}
-          <div className="mb-10">
-
-            <div className="flex items-center gap-4 mb-5">
-
-              <FaMicrophone className="text-3xl text-blue-400" />
-
-              <h2 className="text-3xl font-semibold">
-                Your Answer
-              </h2>
-
-            </div>
-
-            <textarea
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Type your technical answer here..."
-              className="w-full h-52 bg-black/30 border border-white/10 rounded-3xl p-6 text-white outline-none resize-none text-lg"
-            ></textarea>
-
-          </div>
-
-          {/* BUTTONS */}
-          <div className="flex gap-5 flex-wrap">
-
-            <button
-              onClick={analyzeAnswer}
-              className="bg-purple-600 hover:bg-purple-700 hover:scale-105 transition duration-300 px-10 py-5 rounded-full text-lg font-medium shadow-lg shadow-purple-500/30"
-            >
-              {loading ? "Analyzing..." : "Analyze Answer"}
-            </button>
-
-            <button
-              onClick={nextQuestion}
-              className="border border-purple-500 hover:bg-purple-500/10 transition duration-300 px-10 py-5 rounded-full text-lg font-medium"
-            >
-              Next Question
-            </button>
-
-          </div>
-
-          {/* FEEDBACK */}
-          {feedback && (
-
-            <div className="mt-10 bg-black/30 border border-white/10 rounded-3xl p-8 whitespace-pre-wrap">
-
-              <h2 className="text-2xl font-bold mb-5 text-purple-400">
-                AI Interview Feedback
-              </h2>
-
-              <p className="text-gray-300 leading-relaxed">
-                {feedback}
-              </p>
-
-            </div>
-
-          )}
-
-        </motion.div>
-
-      </div>
+      </motion.div>
 
     </div>
   );

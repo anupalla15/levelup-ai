@@ -35,37 +35,44 @@ def home():
     return {
         "message": "LevelUp AI Backend Running"
     }
-
-# ANALYZE ROUTE
 @app.post("/analyze")
 def analyze_answer(data: AnswerRequest):
 
     prompt = f"""
-    You are an expert AI technical interviewer.
+You are an advanced AI technical interviewer.
 
-    Analyze this candidate answer dynamically.
+Analyze the candidate answer professionally.
 
-    Candidate Answer:
-    {data.answer}
+Candidate Answer:
+{data.answer}
 
-    Give:
-    1. Technical Score out of 10
-    2. Communication Score
-    3. Strengths
-    4. Weaknesses
-    5. Improvement Suggestions
-    6. Recommended Topics
+Rules:
+- If answer is weak or says "I don't know", give low realistic scores.
+- Keep feedback SHORT and precise.
+- Avoid overly long paragraphs.
+- Sound like a real interviewer.
 
-    IMPORTANT:
-    If answer is weak or says "I don't know",
-    give low scores realistically.
+Return STRICTLY in this format:
 
-    Keep response professional.
-    """
+Technical Score: X/10
+
+Communication Score: X/10
+
+Strengths:
+- point
+- point
+
+Weaknesses:
+- point
+- point
+
+Suggestions:
+- point
+- point
+"""
 
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-
         messages=[
             {
                 "role": "user",
@@ -79,3 +86,4 @@ def analyze_answer(data: AnswerRequest):
     return {
         "feedback": feedback
     }
+  
