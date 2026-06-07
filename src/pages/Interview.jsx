@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { FaRobot, FaMicrophone, FaBrain } from "react-icons/fa";
+import { FaRobot, FaMicrophone } from "react-icons/fa";
 
 function Interview() {
 
@@ -9,7 +10,9 @@ function Interview() {
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
+
   const [difficulty, setDifficulty] = useState("medium");
+  const [confidence, setConfidence] = useState("Intermediate");
 
   const easyQuestions = [
     "What is HTML?",
@@ -30,11 +33,13 @@ function Interview() {
   ];
 
   useEffect(() => {
+
     setQuestion(
       mediumQuestions[
         Math.floor(Math.random() * mediumQuestions.length)
       ]
     );
+
   }, []);
 
   const nextQuestion = () => {
@@ -71,18 +76,49 @@ function Interview() {
 
   const analyzeAnswer = async () => {
 
+    if (answer.trim() === "") {
+
+      alert("Please enter an answer");
+      return;
+
+    }
+
     try {
 
       setLoading(true);
-
-      const response = await axios.post(
-        "http://127.0.0.1:8000/analyze",
-        {
-          answer: answer
-        }
-      );
+const response = await axios.post(
+  "http://127.0.0.1:8000/analyze",
+  {
+    answer: answer,
+  }
+);
 
       setFeedback(response.data.feedback);
+
+      // AI CONFIDENCE
+
+      if (
+        answer.includes("because") ||
+        answer.includes("example") ||
+        answer.includes("difference")
+      ) {
+
+        setConfidence("Advanced");
+
+      } else if (
+        answer.toLowerCase().includes("i don't know") ||
+        answer.length < 20
+      ) {
+
+        setConfidence("Beginner");
+
+      } else {
+
+        setConfidence("Intermediate");
+
+      }
+
+      // DIFFICULTY LOGIC
 
       if (
         answer.toLowerCase().includes("i don't know") ||
@@ -125,22 +161,31 @@ function Interview() {
       >
 
         <div className="flex items-center gap-3 mb-6 text-purple-400">
+
           <FaRobot />
+
           <span>AI Adaptive Interview Engine</span>
+
         </div>
 
         <h1 className="text-5xl font-bold mb-6">
-          AI Mock Interview
+          LevelUp AI — Adaptive Career Intelligence Platform
         </h1>
 
         <div className="mb-8">
+
           <p className="text-gray-400 mb-2">
             Difficulty: {difficulty}
+          </p>
+
+          <p className="text-gray-400 mb-2">
+            AI Confidence: {confidence}
           </p>
 
           <div className="bg-black/30 p-6 rounded-2xl">
             {question}
           </div>
+
         </div>
 
         <textarea
@@ -156,7 +201,7 @@ function Interview() {
             onClick={analyzeAnswer}
             className="bg-purple-600 px-6 py-3 rounded-full"
           >
-            {loading ? "Analyzing..." : "Analyze Answer"}
+            {loading ? "AI is reasoning..." : "Analyze Answer"}
           </button>
 
           <button
