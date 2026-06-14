@@ -1,39 +1,71 @@
 # LevelUp AI
 
-## Overview
+## Adaptive Career Intelligence Platform
 
-LevelUp AI is an Adaptive Career Intelligence Platform that helps students prepare for interviews and evaluate their career readiness using AI.
+LevelUp AI is an AI-powered interview preparation and career intelligence platform that helps students assess their technical skills, communication skills, workplace readiness, and career growth path.
+
+---
 
 ## Features
 
-- AI Interview Generator
-- Domain Based Questions
-- Voice Support
-- AI Feedback
+### AI Interview Engine
+- Domain-based interview questions
+- Difficulty-based adaptive questions
+- Voice-enabled interview support
+
+### AI Feedback
+- Technical score
+- Communication score
+- Strengths analysis
+- Weakness analysis
+- Improvement suggestions
+
+### Career Intelligence
 - Career IQ
-- Personalized Roadmaps
-- Career Profile Generation
-- Career Recommendations
-- Microsoft Work IQ
-- Microsoft Fabric IQ Dashboard
+- Interview readiness
+- Personalized roadmap
 
-## Microsoft IQ Integration
+### AI Career Profile
+- Current level
+- Strength areas
+- Weak areas
+- Recommended job roles
+- Skills to learn
 
-### Foundry IQ
+### AI Career Recommendation
+- Career path
+- Target roles
+- Salary guidance
+- Timeline estimation
+
+### Microsoft IQ Integration
+
+#### Foundry IQ
 - Career Roadmap
 - Career Profile
 - Career Recommendations
 
-### Work IQ
+#### Work IQ
 - Communication Intelligence
 - Technical Intelligence
-- Leadership Potential
-- Work Readiness
+- Work Readiness Analysis
 
-### Fabric IQ
-- Career Dashboard
-- Interview Analytics
-- Career IQ Tracking
+#### Fabric IQ
+- Dashboard Analytics
+- Interview History
+- Career Progress Tracking
+
+---
+
+## Architecture
+
+User
+→ React Frontend
+→ FastAPI Backend
+→ Groq LLM
+→ Microsoft IQ Modules
+
+---
 
 ## Tech Stack
 
@@ -44,20 +76,21 @@ Frontend:
 
 Backend:
 - FastAPI
+- Python
+
+AI:
 - Groq LLM
 
-## Installation
+Deployment:
+- Vercel
+- Render
 
-Frontend
+---
 
-```bash
-npm install
-npm run dev
-```
+## Future Enhancements
 
-Backend
-
-```bash
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+- Resume Analysis
+- Authentication
+- Real-time Interview Sessions
+- AI Skill Gap Tracking
+- Company-specific Interview Modes
