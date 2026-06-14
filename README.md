@@ -79,6 +79,9 @@ LevelUp AI solves this problem by providing adaptive AI-powered interviews, inst
 - Improved interview simulation
 
 ---
+## Architecture
+
+![Architecture](LevelUpAI_Architecture.png)
 
 ## 📸 Screenshots
 
