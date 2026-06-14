@@ -1,16 +1,63 @@
-# React + Vite
+# LevelUp AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+LevelUp AI is an Adaptive Career Intelligence Platform that helps students prepare for interviews and evaluate their career readiness using AI.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- AI Interview Generator
+- Domain Based Questions
+- Voice Support
+- AI Feedback
+- Career IQ
+- Personalized Roadmaps
+- Career Profile Generation
+- Career Recommendations
+- Microsoft Work IQ
+- Microsoft Fabric IQ Dashboard
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Microsoft IQ Integration
 
-## Expanding the ESLint configuration
+### Foundry IQ
+- Career Roadmap
+- Career Profile
+- Career Recommendations
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Work IQ
+- Communication Intelligence
+- Technical Intelligence
+- Leadership Potential
+- Work Readiness
+
+### Fabric IQ
+- Career Dashboard
+- Interview Analytics
+- Career IQ Tracking
+
+## Tech Stack
+
+Frontend:
+- React
+- Tailwind CSS
+- Framer Motion
+
+Backend:
+- FastAPI
+- Groq LLM
+
+## Installation
+
+Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+Backend
+
+```bash
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
