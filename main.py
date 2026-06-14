@@ -22,14 +22,11 @@ client = Groq(
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://levelup-ai-eight.vercel.app"
-    ],
+    allow_origins=["*"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # HOME
 @app.get("/")
