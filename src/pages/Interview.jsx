@@ -1,4 +1,7 @@
-import { useLocation } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate
+} from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -14,6 +17,7 @@ function Interview() {
   // LOCATION
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const selectedDomain =
     location.state?.domain || "React";
@@ -34,6 +38,11 @@ function Interview() {
 
   const [loading, setLoading] =
     useState(false);
+    const [careerAdvice, setCareerAdvice] =
+  useState("");
+
+const [workIQ, setWorkIQ] =
+  useState("");
 
   const [difficulty, setDifficulty] =
     useState("medium");
@@ -52,6 +61,9 @@ function Interview() {
 
   const [roadmap, setRoadmap] =
     useState("");
+
+  const [careerProfile, setCareerProfile] =
+  useState("");
 
   // GENERATE QUESTION
 
@@ -180,7 +192,6 @@ function Interview() {
   };
 
   // ANALYZE ANSWER
-
   const analyzeAnswer = async () => {
 
     if (answer.trim() === "") {
@@ -196,7 +207,6 @@ function Interview() {
     try {
 
       setLoading(true);
-
       // FEEDBACK
 
       const response =
@@ -217,6 +227,70 @@ function Interview() {
         response.data.feedback.match(
           /Technical Score:\s*(\d+)/
         );
+        if (match) {
+
+  const score =
+    Number(match[1]);
+
+  setCareerIQ(score);
+
+  let currentReadiness =
+    "Beginner";
+
+  if (score >= 8) {
+
+    currentReadiness =
+      "Job Ready";
+
+    setReadiness(
+      "Job Ready"
+    );
+
+  } else if (score >= 5) {
+
+    currentReadiness =
+      "Intermediate";
+
+    setReadiness(
+      "Intermediate"
+    );
+
+  } else {
+
+    currentReadiness =
+      "Beginner";
+
+    setReadiness(
+      "Beginner"
+    );
+
+  }
+
+  // SAVE HISTORY
+
+  const previous =
+    JSON.parse(
+      localStorage.getItem(
+        "interviews"
+      ) || "[]"
+    );
+
+  previous.push({
+    domain,
+    score,
+    readiness:
+      currentReadiness,
+    date:
+      new Date()
+        .toLocaleDateString()
+  });
+
+  localStorage.setItem(
+    "interviews",
+    JSON.stringify(previous)
+  );
+
+}
 
       if (match) {
 
@@ -311,6 +385,43 @@ function Interview() {
       setRoadmap(
         roadmapResponse.data.roadmap
       );
+
+      const profileResponse =
+  await axios.post(
+    "http://127.0.0.1:8000/career-profile",
+    {
+      feedback: response.data.feedback,
+      domain
+    }
+  );
+
+setCareerProfile(
+  profileResponse.data.profile
+);
+const adviceResponse =
+  await axios.post(
+    "http://127.0.0.1:8000/career-advice",
+    {
+      profile:
+        profileResponse.data.profile
+    }
+  );
+
+setCareerAdvice(
+  adviceResponse.data.advice
+);
+const workIQResponse =
+  await axios.post(
+    "http://127.0.0.1:8000/work-iq",
+    {
+      feedback:
+        response.data.feedback
+    }
+  );
+
+setWorkIQ(
+  workIQResponse.data.work_iq
+);
 
     } catch (error) {
 
@@ -652,6 +763,23 @@ function Interview() {
                 Next Question
 
               </button>
+              <button
+  onClick={() =>
+    navigate("/dashboard")
+  }
+  className="
+    bg-yellow-600
+    hover:bg-yellow-700
+    transition
+    px-6
+    py-3
+    rounded-full
+  "
+>
+
+  Dashboard
+
+</button>
 
             </div>
 
@@ -763,6 +891,109 @@ function Interview() {
               </div>
 
             )}
+{/* CAREER PROFILE */}
+
+{careerProfile && (
+
+  <div className="
+    mt-8
+    bg-black/30
+    p-6
+    rounded-2xl
+  ">
+
+    <h2 className="
+      text-2xl
+      font-bold
+      mb-4
+      text-yellow-400
+    ">
+
+      AI Career Profile
+
+    </h2>
+
+    <p className="
+      whitespace-pre-wrap
+      text-gray-300
+    ">
+
+      {careerProfile}
+
+    </p>
+
+  </div>
+
+)}
+{/* CAREER RECOMMENDATION */}
+
+{careerAdvice && (
+
+  <div className="
+    mt-8
+    bg-black/30
+    p-6
+    rounded-2xl
+  ">
+
+    <h2 className="
+      text-2xl
+      font-bold
+      mb-4
+      text-green-400
+    ">
+
+      AI Career Recommendation
+
+    </h2>
+
+    <p className="
+      whitespace-pre-wrap
+      text-gray-300
+    ">
+
+      {careerAdvice}
+
+    </p>
+
+  </div>
+
+)}
+
+{/* MICROSOFT WORK IQ */}
+
+{workIQ && (
+
+  <div className="
+    mt-8
+    bg-black/30
+    p-6
+    rounded-2xl
+  ">
+
+    <h2 className="
+      text-2xl
+      font-bold
+      mb-4
+      text-blue-400
+    ">
+
+      Microsoft Work IQ
+
+    </h2>
+
+    <p className="
+      whitespace-pre-wrap
+      text-gray-300
+    ">
+
+      {workIQ}
+
+    </p>
+
+  </div>
+
+)}
 
           </>
 
