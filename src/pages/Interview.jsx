@@ -73,7 +73,7 @@ const [workIQ, setWorkIQ] =
 
       const response =
         await axios.post(
-          "http://127.0.0.1:8000/generate-question",
+          "https://levelup-ai-0l50.onrender.com/generate-question",
           {
             domain,
             difficulty,
@@ -211,7 +211,7 @@ const [workIQ, setWorkIQ] =
 
       const response =
         await axios.post(
-          "http://127.0.0.1:8000/analyze",
+          "https://levelup-ai-0l50.onrender.com/analyze",
           {
             answer,
           }
@@ -375,7 +375,7 @@ const [workIQ, setWorkIQ] =
 
       const roadmapResponse =
         await axios.post(
-          "http://127.0.0.1:8000/roadmap",
+          "https://levelup-ai-0l50.onrender.com/roadmap",
           {
             feedback:
               response.data.feedback,
@@ -388,7 +388,7 @@ const [workIQ, setWorkIQ] =
 
       const profileResponse =
   await axios.post(
-    "http://127.0.0.1:8000/career-profile",
+    "https://levelup-ai-0l50.onrender.com/career-profile",
     {
       feedback: response.data.feedback,
       domain
@@ -400,7 +400,7 @@ setCareerProfile(
 );
 const adviceResponse =
   await axios.post(
-    "http://127.0.0.1:8000/career-advice",
+    "https://levelup-ai-0l50.onrender.com/career-advice",
     {
       profile:
         profileResponse.data.profile
@@ -412,7 +412,7 @@ setCareerAdvice(
 );
 const workIQResponse =
   await axios.post(
-    "http://127.0.0.1:8000/work-iq",
+    "https://levelup-ai-0l50.onrender.com/work-iq",
     {
       feedback:
         response.data.feedback
